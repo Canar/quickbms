@@ -1539,6 +1539,7 @@ int perform_encryption(u8 *data, int datalen) {
         if(!g_encrypt_mode) {
 
         // X = public or private    Y = decrypt or encrypt
+#ifdef RSA_SSLV23_PADDING
         #define QUICKBMS_OPENSSL_RSA(X, Y) \
             if(!rsa_ctx->openssl_rsa || RSA_##X##_##Y (datalen, data, data, rsa_ctx->openssl_rsa, RSA_PKCS1_PADDING) < 0) \
             if(!rsa_ctx->openssl_rsa || RSA_##X##_##Y (datalen, data, data, rsa_ctx->openssl_rsa, RSA_SSLV23_PADDING) < 0) \
@@ -1546,6 +1547,14 @@ int perform_encryption(u8 *data, int datalen) {
             if(!rsa_ctx->openssl_rsa || RSA_##X##_##Y (datalen, data, data, rsa_ctx->openssl_rsa, RSA_PKCS1_OAEP_PADDING) < 0) \
             if(!rsa_ctx->openssl_rsa || RSA_##X##_##Y (datalen, data, data, rsa_ctx->openssl_rsa, RSA_X931_PADDING) < 0) \
             if(!rsa_ctx->openssl_rsa || RSA_##X##_##Y (datalen, data, data, rsa_ctx->openssl_rsa, RSA_PKCS1_PSS_PADDING) < 0)
+#else
+        #define QUICKBMS_OPENSSL_RSA(X, Y) \
+            if(!rsa_ctx->openssl_rsa || RSA_##X##_##Y (datalen, data, data, rsa_ctx->openssl_rsa, RSA_PKCS1_PADDING) < 0) \
+            if(!rsa_ctx->openssl_rsa || RSA_##X##_##Y (datalen, data, data, rsa_ctx->openssl_rsa, RSA_NO_PADDING) < 0) \
+            if(!rsa_ctx->openssl_rsa || RSA_##X##_##Y (datalen, data, data, rsa_ctx->openssl_rsa, RSA_PKCS1_OAEP_PADDING) < 0) \
+            if(!rsa_ctx->openssl_rsa || RSA_##X##_##Y (datalen, data, data, rsa_ctx->openssl_rsa, RSA_X931_PADDING) < 0) \
+            if(!rsa_ctx->openssl_rsa || RSA_##X##_##Y (datalen, data, data, rsa_ctx->openssl_rsa, RSA_PKCS1_PSS_PADDING) < 0)
+#endif
 
         // X = function name    ... = arguments
         #define QUICKBMS_TOMCRYPT_RSA(X, ...) \
