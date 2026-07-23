@@ -1,6 +1,6 @@
 EXE		= quickbms
 # -m32 because QuickBMS has been tested only on 32bit systems and gives problems using 64bit native code
-CFLAGS	+= -m32 -s -O2 -fstack-protector-all -fno-unit-at-a-time -fno-omit-frame-pointer -fno-pie -fPIC -w
+CFLAGS	+= -m32 -s -O2 -fstack-protector-all -fno-unit-at-a-time -fno-omit-frame-pointer -fno-pie -fPIC -w -std=gnu17
 CFLAGS  += -Wno-error=incompatible-pointer-types -Wno-error=implicit-function-declaration
 # Add -DQUICKBMS64 to CDEFS for compiling quickbms_4gb_files
 # For static builds on Linux (no MacOSX due to -lcrt0 error) add: -static
